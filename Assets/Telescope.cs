@@ -2,23 +2,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using SimpleJSON;
+using System.Linq;
+
 public class Telescope : MonoBehaviour {
     
     public float minBrightness;
     public float maxBrightness;
     public GameObject prefab;
-    public TextAsset json; 
+    public TextAsset starJson, constellationsJson; 
     void Start()
     {
         //string url = "http://star-api.herokuapp.com/api/v1/stars?min%5Bappmag%5D="+minBrightness+"&max%5Bappmag%5D=" + maxBrightness;
         print("Test;");
-        JSONNode root;
+        JSONNode starsRoot;
         //WWW www = new WWW(url);
         //yield return www;
-        print(json.text);
-        root = JSONNode.Parse(json.text);
-        print(root.AsArray.Count);
-        foreach (var star in root.AsArray.Childs)
+        //print(starJson.text);
+        starsRoot = JSONNode.Parse(starJson.text);
+        //print(starsRoot.AsArray.Count);
+        foreach (var star in starsRoot.AsArray.Childs)
         {
             
             var starObj = GameObject.Instantiate(prefab);
@@ -38,6 +40,17 @@ public class Telescope : MonoBehaviour {
             //starObj.transform.localScale /= 100f;
         }
         print("Done");
+
+        JSONNode constellationsRoot;
+        //WWW www = new WWW(url);
+        //yield return www;
+        //print(starJson.text);
+        constellationsRoot = JSONNode.Parse(constellationsJson.text);
+        //print(starsRoot.AsArray.Count);
+
+        var dict = constellationsRoot.AsArray.Childs.GroupBy(a => a["galaxy"]);
+
+        print(dict);
 
     }
 
